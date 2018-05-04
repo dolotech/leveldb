@@ -74,6 +74,17 @@ func TestBloomFilter_Empty(t *testing.T) {
 	h.assert([]byte("world"), false, false)
 }
 
+func TestBloomFilter_Small1(t *testing.T) {
+	var bloom bloomFilter
+	generator := bloom.NewGenerator()
+	generator.Add([]byte("world"))
+	b := &util.Buffer{}
+
+	generator.Generate(b)
+
+	t.Log(bloom.Contains(b.Bytes(), []byte("world")))
+
+}
 func TestBloomFilter_Small(t *testing.T) {
 	h := newHarness(t)
 	h.add([]byte("hello"))
