@@ -127,6 +127,36 @@ func FileDescOk(fd FileDesc) bool {
 	return fd.Num >= 0
 }
 
+
+
+// File is the file. A file instance must be goroutine-safe.
+type File interface {
+	// Open opens the file for read. Returns os.ErrNotExist error
+	// if the file does not exist.
+	// Returns ErrClosed if the underlying storage is closed.
+	Open() (r Reader, err error)
+
+	// Create creates the file for writting. Truncate the file if
+	// already exist.
+	// Returns ErrClosed if the underlying storage is closed.
+	Create() (w Writer, err error)
+
+	// Replace replaces file with newfile.
+	// Returns ErrClosed if the underlying storage is closed.
+	Replace(newfile File) error
+
+	// Type returns the file type
+	Type() FileType
+
+	// Num returns the file number.
+	Num() uint64
+
+	// Remove removes the file.
+	// Returns ErrClosed if the underlying storage is closed.
+	Remove() error
+}
+
+
 // Storage is the storage. A storage instance must be safe for concurrent use.
 type Storage interface {
 	// Lock locks the storage. Any subsequent attempt to call Lock will fail

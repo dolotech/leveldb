@@ -14,23 +14,6 @@ func bloomHash(key []byte) uint32 {
 	return util.Hash(key, 0xbc9f1d34)
 }
 
-// Bloom Filter，即布隆过滤器，是一种空间效率很高的随机数据结构。
-//
-// 原理：开辟m个bit位数组的空间，并全部置零，使用k个哈希函数将元素映射到数组中，相应位置1.如下图，元素K通过哈希函数h1,h2,h3在数组上置1。
-// LevelDB中加入bloom filter的支持。目前针对一次查询，LevelDB可能需要在每个level上进行一次磁盘随机访问。通过使用bloom filter可以大大减少所需要的磁盘I/O操作。
-// 比如，假设调用者正在查找一个值为"Foo"的key，LevelDB会从每个level下选择相应的SSTable文件(那些range包含了该key的文件)，之后会在这些SSTable文件上进行随机读。
-// 如果每个SSTable都有一个对应的bloom filter，那么查找时就可以很容易地通过检查bloom filter跳过那些不包含该key的SSTable文件。
-// 在leveldb的实现中，Name()返回"leveldb.BuiltinBloomFilter"，因此metaindex block 中的key就是"filter.leveldb.BuiltinBloomFilter"。
-// Leveldb使用了double hashing来模拟多个hash函数，当然这里不是用来解决冲突的。
-// 和线性再探测（linearprobing）一样，Double hashing从一个hash值开始，重复向前迭代，直到解决冲突或者搜索完hash表。
-// 不同的是，double hashing使用的是另外一个hash函数，而不是固定的步长。
-// 给定两个独立的hash函数h1和h2，对于hash表T和值k，第i次迭代计算出的位置就是：h(i, k) = (h1(k) + i*h2(k)) mod |T|。
-// 对此，Leveldb选择的hash函数是：
-// Gi(x)=H1(x)+iH2(x)
-// H2(x)=(H1(x)>>17) | (H1(x)<<15)
-// H1是一个基本的hash函数，H2是由H1循环右移得到的，Gi(x)就是第i次循环得到的hash值。【理论分析可参考论文Kirsch,Mitzenmacher2006】
-// 说明bloomfliter 的原理之后来看下Leveldb是怎么来实现它的， 使用CreateFilter创建一个bloomfliter
-
 type bloomFilter int
 
 // The bloom filter serializes its parameters and is backward compatible

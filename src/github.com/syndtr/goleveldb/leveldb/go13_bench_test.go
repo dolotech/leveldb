@@ -13,7 +13,7 @@ import (
 	"testing"
 )
 
-func BenchmarkDBReadConcurrent(b *testing.B) {
+func BenchmarkDBReadConcurrent3(b *testing.B) {
 	p := openDBBench(b, false)
 	p.populate(b.N)
 	p.fill()
@@ -31,7 +31,7 @@ func BenchmarkDBReadConcurrent(b *testing.B) {
 	})
 }
 
-func BenchmarkDBReadConcurrent2(b *testing.B) {
+func BenchmarkDBReadConcurrent4(b *testing.B) {
 	p := openDBBench(b, false)
 	p.populate(b.N)
 	p.fill()

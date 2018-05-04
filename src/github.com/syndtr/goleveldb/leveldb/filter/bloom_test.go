@@ -1,9 +1,15 @@
+// Copyright (c) 2012, Suryandaru Triandana <syndtr@gmail.com>
+// All rights reserved.
+//
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+
 package filter
 
 import (
 	"encoding/binary"
-	"testing"
 	"github.com/syndtr/goleveldb/leveldb/util"
+	"testing"
 )
 
 type harness struct {

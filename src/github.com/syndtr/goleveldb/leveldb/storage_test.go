@@ -17,8 +17,8 @@ import (
 	"sync"
 	"testing"
 
-	"github.com/conseweb/goleveldb/leveldb/storage"
-	"github.com/conseweb/goleveldb/leveldb/util"
+	"github.com/syndtr/goleveldb/leveldb/storage"
+	"github.com/syndtr/goleveldb/leveldb/util"
 )
 
 const typeShift = 4
@@ -40,7 +40,7 @@ var (
 type tsOp uint
 
 const (
-	tsOpOpen tsOp = iota
+	tsOpOpen   tsOp = iota
 	tsOpCreate
 	tsOpRead
 	tsOpReadAt
@@ -268,7 +268,7 @@ func (tf tsFile) Remove() (err error) {
 }
 
 type testStorage struct {
-	t *testing.T
+	t       *testing.T
 	storage.Storage
 	closeFn func() error
 
@@ -378,7 +378,7 @@ func (ts *testStorage) SetIgnoreOpenErr(t storage.FileType) {
 	ts.ignoreOpenErr = t
 }
 
-func (ts *testStorage) Lock() (r util.Releaser, err error) {
+/*func (ts *testStorage) Lock() (r util.Releaser, err error) {
 	r, err = ts.Storage.Lock()
 	if err != nil {
 		ts.t.Logf("W: storage locking failed: %v", err)
@@ -388,12 +388,12 @@ func (ts *testStorage) Lock() (r util.Releaser, err error) {
 	}
 	return
 }
-
+*/
 func (ts *testStorage) Log(str string) {
 	ts.t.Log("L: " + str)
 	ts.Storage.Log(str)
 }
-
+/*
 func (ts *testStorage) GetFile(num uint64, t storage.FileType) storage.File {
 	return tsFile{ts, ts.Storage.GetFile(num, t)}
 }
@@ -441,7 +441,7 @@ func (ts *testStorage) SetManifest(f storage.File) error {
 		ts.t.Logf("I: set manifest, num=%d", tf.Num())
 	}
 	return err
-}
+}*/
 
 func (ts *testStorage) Close() error {
 	ts.CloseCheck()
@@ -488,7 +488,7 @@ func newTestStorage(t *testing.T) *testStorage {
 			}
 			path := filepath.Join(tempdir, fmt.Sprintf("goleveldb-test%d0%d0%d", os.Getuid(), os.Getpid(), num))
 			if _, err := os.Stat(path); err != nil {
-				stor, err = storage.OpenFile(path)
+				stor, err = storage.OpenFile(path,false)
 				if err != nil {
 					t.Fatalf("F: cannot create storage: %v", err)
 				}
